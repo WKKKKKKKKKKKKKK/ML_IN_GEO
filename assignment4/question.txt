@@ -1,0 +1,4 @@
+Divide the data into 80% for training and 20% for testing.
+Plot the input and target of your problem to fully understand what you are trying to accomplish.
+Design a U-Net to denoise and interpolate the seismic data simultaneously.
+Plot some samples of the test set, obtain the SNR for each test sample, and calculate the SNR improvement after applying the U-Net.
