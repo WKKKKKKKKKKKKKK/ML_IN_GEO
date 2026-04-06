@@ -1,0 +1,46 @@
+CNN-PatchUNET experiment summary
+============================
+
+Setup
+-----
+- Model: CNN-based PatchUNET replacing the fully connected layers with convolutional encoder-decoder blocks
+- Training target: noisy patches
+- Device: cuda
+- Selected noise standard deviation: 0.777778
+
+Best hyperparameters after the search
+-------------------------------------
+- patch_size = 32
+- stride = 8
+- base_width = 32
+- learning_rate = 0.001
+- batch_size = 256
+
+SNR
+---
+- Original noisy-shot SNR: 1.9068 dB
+- Best denoised-shot SNR during the final run: 2.1626 dB
+- Best epoch: 221
+- Final epoch SNR: 1.9026 dB
+- Improvement at the best epoch: 0.2558 dB
+
+Comparison
+----------
+- q1_unet best SNR: 6.4576 dB
+- CNN-PatchUNET best-SNR gain vs q1_unet: -4.2949 dB
+- q1_unet final SNR: 5.0729 dB
+- CNN-PatchUNET final-SNR gain vs q1_unet: -3.1703 dB
+- mlp_patchunet best SNR: 9.5349 dB
+- CNN-PatchUNET best-SNR gain vs mlp_patchunet: -7.3723 dB
+- mlp_patchunet final SNR: 9.4512 dB
+- CNN-PatchUNET final-SNR gain vs mlp_patchunet: -7.5486 dB
+
+Saved notebook-style plots
+--------------------------
+- assignment5\patchunet_cnn\plots\final_run\cnn_p32_s8_w32_lr0.001_b256_epoch0001.png
+- assignment5\patchunet_cnn\plots\final_run\cnn_p32_s8_w32_lr0.001_b256_epoch0050.png
+- assignment5\patchunet_cnn\plots\final_run\cnn_p32_s8_w32_lr0.001_b256_epoch0100.png
+- assignment5\patchunet_cnn\plots\final_run\cnn_p32_s8_w32_lr0.001_b256_epoch0150.png
+- assignment5\patchunet_cnn\plots\final_run\cnn_p32_s8_w32_lr0.001_b256_epoch0200.png
+- assignment5\patchunet_cnn\plots\final_run\cnn_p32_s8_w32_lr0.001_b256_epoch0250.png
+- assignment5\patchunet_cnn\plots\final_run\cnn_p32_s8_w32_lr0.001_b256_epoch0300.png

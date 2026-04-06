@@ -1,0 +1,45 @@
+PatchUNET notebook reproduction summary
+=================================
+
+Setup
+-----
+- Model: notebook-style PatchUNET with patch-wise MLP encoder-decoder
+- Training target: noisy patches
+- Device: cuda
+- Selected noise standard deviation: 0.777778
+
+Best hyperparameters after the search
+-------------------------------------
+- patch_size = 48
+- stride = 4
+- base_width = 128
+- latent_dim = 4
+- learning_rate = 0.001
+- batch_size = 256
+
+SNR
+---
+- Original noisy-shot SNR: 1.9068 dB
+- Best denoised-shot SNR during the final run: 9.5349 dB
+- Best epoch: 293
+- Final epoch SNR: 9.4512 dB
+- Improvement at the best epoch: 7.6281 dB
+
+Comparison to Q1 UNET
+---------------------
+- Q1 best SNR: 6.4576 dB
+- PatchUNET best SNR: 9.5349 dB
+- Best-SNR gain vs Q1: 3.0774 dB
+- Q1 final SNR: 5.0729 dB
+- PatchUNET final SNR: 9.4512 dB
+- Final-SNR gain vs Q1: 4.3783 dB
+
+Saved notebook-style plots
+--------------------------
+- assignment5\patchunet\plots\final_run\p48_s4_w128_z4_lr0.001_b256_epoch0001.png
+- assignment5\patchunet\plots\final_run\p48_s4_w128_z4_lr0.001_b256_epoch0050.png
+- assignment5\patchunet\plots\final_run\p48_s4_w128_z4_lr0.001_b256_epoch0100.png
+- assignment5\patchunet\plots\final_run\p48_s4_w128_z4_lr0.001_b256_epoch0150.png
+- assignment5\patchunet\plots\final_run\p48_s4_w128_z4_lr0.001_b256_epoch0200.png
+- assignment5\patchunet\plots\final_run\p48_s4_w128_z4_lr0.001_b256_epoch0250.png
+- assignment5\patchunet\plots\final_run\p48_s4_w128_z4_lr0.001_b256_epoch0300.png

@@ -1,0 +1,48 @@
+﻿Week7DIP UNET reproduction summary
+================================
+
+Setup
+-----
+- Model: notebook-style UNET with additive skip connections
+- Training target: noisy shot
+- Input: random noise tensor z with additive input perturbation during optimization
+- Device: cuda
+- Selected noise standard deviation: 0.777778
+
+Noise initialization comparison
+-------------------------------
+- gaussian: best SNR = 4.0310 dB at epoch 1355
+- uniform: best SNR = 3.3194 dB at epoch 1518
+- zeros: best SNR = -12.3858 dB at epoch 1
+
+Selected best initialization
+----------------------------
+- init_mode = gaussian
+
+Best hyperparameters after the search
+-------------------------------------
+- fm1 = 64
+- fm2 = 128
+- fm3 = 256
+- bottleneck_dim = 512
+- learning_rate = 0.0003
+- reg_noise_std = 0.4
+- init_scale = 0.4
+
+SNR
+---
+- Original noisy-shot SNR: 1.9068 dB
+- Best denoised-shot SNR during the final run: 3.4882 dB
+- Best epoch: 1778
+- Final epoch SNR: 2.2753 dB
+- Improvement at the best epoch: 1.5814 dB
+
+Saved notebook-style plots
+--------------------------
+- assignment5\\with_skip\\plots\final_run\gaussian_fm64_lr0.0003_rn0.4_epoch0001.png
+- assignment5\\with_skip\\plots\final_run\gaussian_fm64_lr0.0003_rn0.4_epoch0500.png
+- assignment5\\with_skip\\plots\final_run\gaussian_fm64_lr0.0003_rn0.4_epoch1000.png
+- assignment5\\with_skip\\plots\final_run\gaussian_fm64_lr0.0003_rn0.4_epoch1500.png
+- assignment5\\with_skip\\plots\final_run\gaussian_fm64_lr0.0003_rn0.4_epoch2000.png
+- assignment5\\with_skip\\plots\final_run\gaussian_fm64_lr0.0003_rn0.4_epoch2200.png
+
