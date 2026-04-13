@@ -1,0 +1,7 @@
+{
+  "base_channels": 24,
+  "lr": 0.00025,
+  "kl_weight": 5e-05,
+  "epochs": 20,
+  "best_val_iou": 0.3750000023841858
+}

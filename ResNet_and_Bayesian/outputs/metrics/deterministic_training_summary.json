@@ -1,0 +1,13 @@
+{
+  "config": {
+    "base_channels": 24,
+    "dropout": 0.1,
+    "lr": 0.0005,
+    "weight_decay": 1e-05,
+    "batch_size": 16,
+    "best_val_iou": 0.6067256724834442,
+    "minutes": 1.8342846353848776
+  },
+  "best_val_iou": 0.723441150188446,
+  "epochs": 30
+}
