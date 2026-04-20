@@ -1,0 +1,233 @@
+Assignment 7 Summary
+Well-log Missing Prediction with Recurrent Networks
+
+Dataset
+- File used: well4tutorial2.xlsx
+- Input features: DTCO, ECGR, RHOB, PHIT
+- Target log: DTSM
+- Device used in notebook outputs: CUDA
+- GPU used in notebook outputs: NVIDIA RTX 3500 Ada Generation Laptop GPU
+
+============================================================
+1. Determine the optimal hyperparameters for RNN, GRU, and LSTM
+============================================================
+
+Hyperparameter search space
+- base_hidden_size: [8, 16]
+- num_layers: [2, 4]
+- learning_rate: [0.001, 0.0005]
+- batch_size: [128]
+- weight_decay: [0.0]
+
+Selection rule
+- For each model family, all hyperparameter combinations were evaluated.
+- The configuration with the lowest validation RMSE was selected as the optimal hyperparameter setting.
+- Validation R2 was used as a supporting metric.
+
+All hyperparameter combinations: sequence length = 8
+
+RNN
+sequence_length | base_hidden_size | num_layers | learning_rate | batch_size | val_rmse | val_r2
+8 | 16 | 2 | 0.0010 | 128 | 17.7339 | 0.7715
+8 | 8  | 2 | 0.0010 | 128 | 18.0215 | 0.7640
+8 | 8  | 4 | 0.0010 | 128 | 18.3417 | 0.7555
+8 | 16 | 4 | 0.0010 | 128 | 18.9539 | 0.7389
+8 | 16 | 4 | 0.0005 | 128 | 19.0444 | 0.7364
+8 | 16 | 2 | 0.0005 | 128 | 19.1543 | 0.7334
+8 | 8  | 4 | 0.0005 | 128 | 20.0557 | 0.7077
+8 | 8  | 2 | 0.0005 | 128 | 20.7001 | 0.6886
+
+GRU
+sequence_length | base_hidden_size | num_layers | learning_rate | batch_size | val_rmse | val_r2
+8 | 16 | 4 | 0.0010 | 128 | 15.2362 | 0.8313
+8 | 16 | 2 | 0.0010 | 128 | 16.1650 | 0.8101
+8 | 16 | 4 | 0.0005 | 128 | 16.6059 | 0.7996
+8 | 8  | 4 | 0.0010 | 128 | 17.1420 | 0.7865
+8 | 8  | 2 | 0.0010 | 128 | 17.5710 | 0.7756
+8 | 8  | 2 | 0.0005 | 128 | 18.9006 | 0.7404
+8 | 16 | 2 | 0.0005 | 128 | 18.9350 | 0.7394
+8 | 8  | 4 | 0.0005 | 128 | 21.1574 | 0.6747
+
+LSTM
+sequence_length | base_hidden_size | num_layers | learning_rate | batch_size | val_rmse | val_r2
+8 | 16 | 2 | 0.0010 | 128 | 15.4917 | 0.8256
+8 | 16 | 4 | 0.0010 | 128 | 16.2224 | 0.8088
+8 | 16 | 4 | 0.0005 | 128 | 18.2864 | 0.7570
+8 | 8  | 2 | 0.0010 | 128 | 18.4806 | 0.7518
+8 | 8  | 4 | 0.0010 | 128 | 18.4981 | 0.7513
+8 | 16 | 2 | 0.0005 | 128 | 19.2508 | 0.7307
+8 | 8  | 2 | 0.0005 | 128 | 20.6374 | 0.6905
+8 | 8  | 4 | 0.0005 | 128 | 21.0391 | 0.6783
+
+All hyperparameter combinations: sequence length = 16
+
+RNN
+sequence_length | base_hidden_size | num_layers | learning_rate | batch_size | val_rmse | val_r2
+16 | 16 | 2 | 0.0010 | 128 | 12.6448 | 0.8769
+16 | 16 | 4 | 0.0010 | 128 | 13.0842 | 0.8682
+16 | 8  | 2 | 0.0010 | 128 | 13.8278 | 0.8528
+16 | 16 | 4 | 0.0005 | 128 | 15.0129 | 0.8265
+16 | 16 | 2 | 0.0005 | 128 | 15.2946 | 0.8199
+16 | 8  | 4 | 0.0010 | 128 | 15.3380 | 0.8189
+16 | 8  | 2 | 0.0005 | 128 | 15.9554 | 0.8040
+16 | 8  | 4 | 0.0005 | 128 | 17.6049 | 0.7614
+
+GRU
+sequence_length | base_hidden_size | num_layers | learning_rate | batch_size | val_rmse | val_r2
+16 | 16 | 4 | 0.0010 | 128 | 11.1881 | 0.9036
+16 | 16 | 2 | 0.0010 | 128 | 12.1631 | 0.8861
+16 | 8  | 4 | 0.0010 | 128 | 12.8514 | 0.8728
+16 | 8  | 2 | 0.0010 | 128 | 13.3342 | 0.8631
+16 | 16 | 2 | 0.0005 | 128 | 13.3738 | 0.8623
+16 | 16 | 4 | 0.0005 | 128 | 14.1040 | 0.8468
+16 | 8  | 2 | 0.0005 | 128 | 15.2255 | 0.8215
+16 | 8  | 4 | 0.0005 | 128 | 15.9998 | 0.8029
+
+LSTM
+sequence_length | base_hidden_size | num_layers | learning_rate | batch_size | val_rmse | val_r2
+16 | 16 | 2 | 0.0010 | 128 | 11.2006 | 0.9034
+16 | 8  | 2 | 0.0010 | 128 | 14.5224 | 0.8376
+16 | 16 | 4 | 0.0010 | 128 | 14.6011 | 0.8359
+16 | 8  | 4 | 0.0010 | 128 | 15.5483 | 0.8139
+16 | 16 | 4 | 0.0005 | 128 | 15.6360 | 0.8118
+16 | 16 | 2 | 0.0005 | 128 | 16.0279 | 0.8022
+16 | 8  | 2 | 0.0005 | 128 | 16.7419 | 0.7842
+16 | 8  | 4 | 0.0005 | 128 | 17.5730 | 0.7622
+
+Best hyperparameters chosen from validation RMSE
+
+sequence_length | model | base_hidden_size | num_layers | learning_rate | batch_size | best_val_rmse | best_val_r2
+8  | RNN  | 16 | 2 | 0.0010 | 128 | 17.7339 | 0.7715
+8  | GRU  | 16 | 4 | 0.0010 | 128 | 15.2362 | 0.8313
+8  | LSTM | 16 | 2 | 0.0010 | 128 | 15.4917 | 0.8256
+16 | RNN  | 16 | 2 | 0.0010 | 128 | 12.6448 | 0.8769
+16 | GRU  | 16 | 4 | 0.0010 | 128 | 11.1881 | 0.9036
+16 | LSTM | 16 | 2 | 0.0010 | 128 | 11.2006 | 0.9034
+
+============================================================
+2. Evaluate the test results using RMSE and R2 Score
+============================================================
+
+Test results with the selected hyperparameters
+
+Sequence length = 8
+model | rmse | r2
+RNN | 12.1102 | 0.8802
+GRU | 11.2701 | 0.8962
+LSTM | 10.6406 | 0.9075
+
+Sequence length = 16
+model | rmse | r2
+RNN | 9.3922 | 0.9301
+GRU | 6.6457 | 0.9650
+LSTM | 6.7129 | 0.9643
+
+Interpretation
+- For the unidirectional models, LSTM was the strongest at sequence length 8.
+- For the unidirectional models, GRU was slightly better than LSTM at sequence length 16.
+- All three unidirectional models improved when the sequence length increased from 8 to 16.
+
+============================================================
+3. Substitute all layers with BiDirectional and re-evaluate the performance
+============================================================
+
+Bidirectional model results
+
+Sequence length = 8
+model | rmse | r2
+BiRNN | 11.9695 | 0.8830
+BiGRU | 12.3207 | 0.8760
+BiLSTM | 10.1331 | 0.9161
+
+Sequence length = 16
+model | rmse | r2
+BiRNN | 8.0919 | 0.9481
+BiGRU | 7.1265 | 0.9598
+BiLSTM | 6.3133 | 0.9684
+
+Bidirectional vs unidirectional comparison
+
+Sequence length = 8
+- RNN -> BiRNN: RMSE improved from 12.1102 to 11.9695, and R2 improved from 0.8802 to 0.8830.
+- GRU -> BiGRU: RMSE worsened from 11.2701 to 12.3207, and R2 dropped from 0.8962 to 0.8760.
+- LSTM -> BiLSTM: RMSE improved from 10.6406 to 10.1331, and R2 improved from 0.9075 to 0.9161.
+
+Sequence length = 16
+- RNN -> BiRNN: RMSE improved from 9.3922 to 8.0919, and R2 improved from 0.9301 to 0.9481.
+- GRU -> BiGRU: RMSE worsened from 6.6457 to 7.1265, and R2 dropped from 0.9650 to 0.9598.
+- LSTM -> BiLSTM: RMSE improved from 6.7129 to 6.3133, and R2 improved from 0.9643 to 0.9684.
+
+Interpretation
+- Bidirectional layers helped RNN and LSTM at both sequence lengths.
+- Bidirectional layers did not help GRU in this dataset.
+- The largest gain from bidirectionality was observed for LSTM and RNN at sequence length 16.
+
+============================================================
+4. Compare the results from all models and determine the best-performing model
+============================================================
+
+Final comparison across all models and both sequence lengths
+
+sequence_length | model | rmse | r2 | base_hidden_size | num_layers | learning_rate | batch_size
+16 | BiLSTM | 6.3133 | 0.9684 | 16 | 2 | 0.0010 | 128
+16 | GRU    | 6.6457 | 0.9650 | 16 | 4 | 0.0010 | 128
+16 | LSTM   | 6.7129 | 0.9643 | 16 | 2 | 0.0010 | 128
+16 | BiGRU  | 7.1265 | 0.9598 | 16 | 4 | 0.0010 | 128
+16 | BiRNN  | 8.0919 | 0.9481 | 16 | 2 | 0.0010 | 128
+16 | RNN    | 9.3922 | 0.9301 | 16 | 2 | 0.0010 | 128
+8  | BiLSTM | 10.1331 | 0.9161 | 16 | 2 | 0.0010 | 128
+8  | LSTM   | 10.6406 | 0.9075 | 16 | 2 | 0.0010 | 128
+8  | GRU    | 11.2701 | 0.8962 | 16 | 4 | 0.0010 | 128
+8  | BiRNN  | 11.9695 | 0.8830 | 16 | 2 | 0.0010 | 128
+8  | RNN    | 12.1102 | 0.8802 | 16 | 2 | 0.0010 | 128
+8  | BiGRU  | 12.3207 | 0.8760 | 16 | 4 | 0.0010 | 128
+
+Best-performing model
+- Best model overall: BiLSTM
+- Sequence length: 16
+- RMSE: 6.3133
+- R2: 0.9684
+- Hyperparameters: base_hidden_size=16, num_layers=2, learning_rate=0.0010, batch_size=128
+
+Rationale for the selection
+- BiLSTM at sequence length 16 achieved the lowest RMSE among all tested models.
+- It also achieved the highest R2, so it was strong on both evaluation metrics.
+- The gap to the second-best model was 0.3324 RMSE, which gives a measurable advantage over the next competitor.
+- The best result at sequence length 8 was also BiLSTM, so the selected architecture was consistently strong across both sequence settings.
+
+============================================================
+5. Change the sequence length to 16 and re-evaluate the models' performance
+============================================================
+
+Best model at each sequence length
+
+sequence_length | model | rmse | r2 | base_hidden_size | num_layers | learning_rate | batch_size
+8  | BiLSTM | 10.1331 | 0.9161 | 16 | 2 | 0.0010 | 128
+16 | BiLSTM | 6.3133 | 0.9684 | 16 | 2 | 0.0010 | 128
+
+Effect of increasing sequence length from 8 to 16
+
+Unidirectional models
+- RNN: RMSE improved from 12.1102 to 9.3922, and R2 improved from 0.8802 to 0.9301.
+- GRU: RMSE improved from 11.2701 to 6.6457, and R2 improved from 0.8962 to 0.9650.
+- LSTM: RMSE improved from 10.6406 to 6.7129, and R2 improved from 0.9075 to 0.9643.
+
+Bidirectional models
+- BiRNN: RMSE improved from 11.9695 to 8.0919, and R2 improved from 0.8830 to 0.9481.
+- BiGRU: RMSE improved from 12.3207 to 7.1265, and R2 improved from 0.8760 to 0.9598.
+- BiLSTM: RMSE improved from 10.1331 to 6.3133, and R2 improved from 0.9161 to 0.9684.
+
+Interpretation
+- Increasing the sequence length to 16 improved every model tested in this assignment.
+- The improvement suggests that a longer temporal context helps the network capture the relationships needed for DTSM prediction.
+- The strongest overall configuration after re-evaluation remained BiLSTM with sequence length 16.
+
+============================================================
+Conclusion
+============================================================
+
+- The optimal hyperparameters repeatedly favored base_hidden_size=16 and learning_rate=0.0010.
+- GRU preferred 4 recurrent layers, while RNN and LSTM preferred 2 layers.
+- Bidirectional layers were beneficial for RNN and LSTM, but not for GRU on this dataset.
+- Sequence length 16 outperformed sequence length 8 for every model.
+- The final recommended model for this assignment is BiLSTM with sequence length 16.
