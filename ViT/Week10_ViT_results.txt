@@ -1,0 +1,115 @@
+Week10 ViT Experiment Results
+=============================
+
+Notebook
+--------
+File: VIT/Week10_ViT.ipynb
+
+Task
+----
+The experiment uses the salt segmentation application from the previous
+ResNet/Bayesian assignment. The goal is to compare a convolutional
+encoder-decoder model with a Vision Transformer based segmentation model.
+
+
+Experimental Settings
+---------------------
+Dataset:
+- Source: ResNet_and_Bayesian/Salt
+- Task type: binary image segmentation
+- Input image size: 64 x 64
+- Total paired image/mask samples: 4000
+- Train / validation / test split: 2890 / 510 / 600
+- Training mask positive pixel fraction: 0.2455
+
+Shared training conditions:
+- Epochs: 60
+- Batch size: 32
+- Loss function: BCEWithLogitsLoss
+- Metrics: pixel accuracy, F1-score/Dice, RMSE, mean IoU
+- Both models used the same dataset split, image size, batch size,
+  epoch count, loss function, and evaluation metrics.
+
+Model 1: ResidualSegNet CNN
+- Architecture type: convolutional encoder-decoder segmentation model
+- Source: adapted from the previous residual segmentation assignment model
+- Number of parameters: 516,545
+- Optimizer: Adam
+- Learning rate: 1e-3
+- Weight decay: 1e-5
+
+Model 2: Vision Transformer Segmenter
+- Architecture type: ViT encoder with convolutional upsampling decoder
+- Patch size: 4 x 4
+- Transformer dimension: 96
+- Transformer depth: 4
+- Attention heads: 4
+- MLP dimension: 192
+- Decoder channels: 96, 48
+- Number of parameters: 588,673
+- Optimizer: AdamW
+- Learning rate: 3e-4
+- Weight decay: 1e-4
+
+
+Validation Results
+------------------
+ResidualSegNet CNN:
+- Best validation mean IoU: 0.6974
+- Training time: 724.0 seconds
+
+Vision Transformer:
+- Best validation mean IoU: 0.6063
+- Training time: 1254.6 seconds
+
+
+Test Results
+------------
+Model                 Pixel Accuracy    F1-score/Dice    RMSE      Mean IoU
+ResidualSegNet CNN    0.9225            0.7468           0.2422    0.7186
+Vision Transformer    0.8647            0.6580           0.3211    0.6159
+
+
+Discussion
+----------
+Both models were trained under similar conditions. They used the same salt
+segmentation dataset, the same train/validation/test split, the same input
+resolution, the same batch size, the same number of epochs, the same loss
+function, and the same evaluation metrics. The two architectures are not
+identical, which is appropriate because the assignment asks for a comparison
+between different model families.
+
+The ResidualSegNet CNN achieved the better final test performance. It reached
+0.9225 pixel accuracy, 0.7468 F1-score/Dice, 0.2422 RMSE, and 0.7186 mean IoU.
+The ViT model reached 0.8647 pixel accuracy, 0.6580 F1-score/Dice, 0.3211 RMSE,
+and 0.6159 mean IoU.
+
+Changing the ViT patch size from 8 x 8 to 4 x 4 improved the ViT result because
+smaller patches preserve more spatial detail. This is especially important for
+segmentation, where the model must predict accurate object boundaries. The
+smaller patch size increased the number of image tokens, allowing the
+transformer to model finer local structure.
+
+Even after this improvement, the CNN still outperformed the ViT. This is
+expected for this dataset and task. Salt segmentation depends heavily on local
+texture, edges, and boundary information. Convolutional models have a strong
+locality bias and use spatial feature extraction naturally. The residual
+encoder-decoder also preserves and reconstructs spatial structure effectively.
+In contrast, a ViT trained from scratch usually needs more data, stronger
+regularization, or pretraining to match a CNN on a relatively small segmentation
+dataset.
+
+The ViT training curve continued to improve on the training set, but validation
+performance became unstable in later epochs. This suggests that simply adding
+more epochs may not reliably close the gap. Better improvements would likely
+come from using a pretrained transformer backbone, adding stronger augmentation,
+using a segmentation-specific transformer architecture, or adding explicit skip
+connections between encoder and decoder stages.
+
+
+Conclusion
+----------
+For this salt segmentation application, the ResidualSegNet CNN is the stronger
+model under the current experimental setup. The ViT benefits from the smaller
+4 x 4 patch size and longer 60-epoch training, but it still performs worse than
+the CNN on all reported test metrics.
